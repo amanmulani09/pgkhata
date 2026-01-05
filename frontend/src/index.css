@@ -1,0 +1,54 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #6366f1;
+  /* Indigo 500 */
+  --color-primary-dark: #4f46e5;
+  /* Indigo 600 */
+  --color-secondary: #64748b;
+  /* Slate 500 */
+  --color-background: #f8fafc;
+  /* Slate 50 */
+  --color-surface: #ffffff;
+  --color-error: #ef4444;
+  --color-success: #22c55e;
+
+  --shadow-soft: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+  --shadow-glow: 0 0 15px rgb(99 102 241 / 0.15);
+}
+
+:root {
+  font-family: 'Outfit', Inter, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  @apply bg-background text-slate-900;
+}
+
+/* Glassmorphism Utilities */
+.glass {
+  @apply bg-white/70 backdrop-blur-lg border border-white/20 shadow-lg;
+}
+
+.glass-panel {
+  @apply bg-white border border-slate-100 shadow-sm transition-all duration-300 hover:shadow-md;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s ease-out forwards;
+}
