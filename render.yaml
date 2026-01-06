@@ -27,10 +27,7 @@ services:
     staticPublishPath: dist
     envVars:
       - key: VITE_API_URL
-        fromService:
-          type: web
-          name: pgkhata-backend
-          property: url
+        value: https://pgkhata-backend.onrender.com/api/v1
     routes:
       - type: rewrite
         source: /*
