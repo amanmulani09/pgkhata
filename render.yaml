@@ -19,7 +19,7 @@ services:
         value: 3.11.0
 
   # Frontend React Static Site
-  - type: web
+  - type: static
     name: pgkhata-frontend
     env: static
     rootDir: frontend
