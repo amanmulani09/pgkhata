@@ -29,6 +29,11 @@ export interface Bed {
     bed_number: string;
     monthly_price: number;
     is_occupied: boolean;
+    tenant?: {
+        id: number;
+        name: string;
+        phone: string;
+    };
 }
 
 export interface Tenant {
@@ -43,6 +48,22 @@ export interface Tenant {
     security_deposit: number;
     pg_id: number;
     bed_id: number;
+    rent_records?: RentRecord[];
+    bed?: {
+        id: number;
+        bed_number: string;
+        monthly_price: number;
+        room?: {
+            id: number;
+            room_number: string;
+            floor: number;
+            type: string;
+        };
+    };
+    pg?: {
+        id: number;
+        name: string;
+    };
 }
 
 export interface RentRecord {
@@ -54,6 +75,17 @@ export interface RentRecord {
     amount_paid: number;
     status: 'pending' | 'paid' | 'partial';
     payment_date?: string;
+}
+
+export interface DashboardStats {
+    total_pgs: number;
+    total_rooms: number;
+    total_beds: number;
+    occupied_beds: number;
+    occupancy_rate: number;
+    total_expected_rent: number;
+    total_collected_rent: number;
+    total_pending_rent: number;
 }
 
 export interface Complaint {

@@ -22,6 +22,11 @@ def create_user(
     """
     Create new user.
     """
+    if user_in.admin_password != "A@shu@2026":
+        raise HTTPException(
+            status_code=403,
+            detail="Unauthorized: Incorrect admin password.",
+        )
     user = db.query(models.User).filter(models.User.email == user_in.email).first()
     if user:
         raise HTTPException(

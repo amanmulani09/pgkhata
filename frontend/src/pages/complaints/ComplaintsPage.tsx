@@ -87,8 +87,8 @@ export const ComplaintsPage = () => {
             </div>
 
             {showAddModal && (
-                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-                    <div className="bg-white rounded-xl shadow-xl max-w-md w-full p-6 animate-in fade-in zoom-in duration-200">
+                <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-in fade-in duration-200">
+                    <div className="bg-white rounded-[2rem] shadow-2xl max-w-md w-full p-6 sm:p-10 animate-in zoom-in-95 duration-200 border border-slate-100 overflow-y-auto max-h-[90vh]">
                         <h2 className="text-xl font-bold mb-4">Log New Complaint</h2>
                         <form onSubmit={handleAddComplaint} className="space-y-4">
                             <div>

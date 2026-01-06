@@ -9,7 +9,7 @@ class RentRecordBase(BaseModel):
     status: str = "pending"
 
 class RentRecordCreate(RentRecordBase):
-    tenant_id: int
+    tenant_id: Optional[int] = None
 
 class RentRecordUpdate(BaseModel):
     status: Optional[str] = None
@@ -18,11 +18,34 @@ class RentRecordUpdate(BaseModel):
 
 class RentRecord(RentRecordBase):
     id: int
-    tenant_id: int
+    tenant_id: Optional[int] = None
     pg_id: int
-    amount_paid: float
+    amount_paid: float = 0.0
     payment_date: Optional[date] = None
 
+    class Config:
+        from_attributes = True
+
+# --- Minimal Schemas for Relationships ---
+class PGMinimal(BaseModel):
+    id: int
+    name: str
+    class Config:
+        from_attributes = True
+
+class RoomMinimal(BaseModel):
+    id: int
+    room_number: str
+    floor: int
+    type: str
+    class Config:
+        from_attributes = True
+
+class BedMinimal(BaseModel):
+    id: int
+    bed_number: str
+    monthly_price: float
+    room: Optional[RoomMinimal] = None
     class Config:
         from_attributes = True
 
@@ -53,6 +76,8 @@ class Tenant(TenantBase):
     bed_id: int
     check_out_date: Optional[date] = None
     rent_records: List[RentRecord] = []
+    bed: Optional[BedMinimal] = None
+    pg: Optional[PGMinimal] = None
 
     class Config:
         from_attributes = True

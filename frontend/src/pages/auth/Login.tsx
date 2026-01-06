@@ -4,7 +4,8 @@ import { useAuth } from '../../context/AuthContext';
 import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
 import api from '../../services/api';
-import { Building2, ArrowRight } from 'lucide-react';
+import { Building2, ArrowRight, ArrowLeft, Languages } from 'lucide-react';
+import { useLanguage } from '../../hooks/useLanguage';
 
 export const Login = () => {
     const [email, setEmail] = useState('');
@@ -13,6 +14,7 @@ export const Login = () => {
     const [isLoading, setIsLoading] = useState(false);
     const { login } = useAuth();
     const navigate = useNavigate();
+    const { t, i18n, languages, changeLanguage } = useLanguage();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -28,7 +30,7 @@ export const Login = () => {
             });
 
             await login(response.data.access_token);
-            navigate('/');
+            navigate('/dashboard');
         } catch (err) {
             setError('Invalid email or password');
         } finally {
@@ -38,6 +40,30 @@ export const Login = () => {
 
     return (
         <div className="min-h-screen w-full flex items-center justify-center bg-[#f8fafc] p-4 relative overflow-hidden">
+            {/* Header with Back Button and Language */}
+            <header className="absolute top-0 left-0 w-full p-6 sm:p-10 z-20 flex justify-between items-center">
+                <button
+                    onClick={() => navigate('/')}
+                    className="group flex items-center gap-2 text-white/90 hover:text-white transition-all bg-white/10 backdrop-blur-md px-4 py-2 rounded-xl border border-white/20 shadow-lg hover:shadow-white/10 hover:bg-white/20"
+                >
+                    <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
+                    <span className="font-semibold text-sm uppercase tracking-wider">{t('nav.back_to_home')}</span>
+                </button>
+
+                <div className="flex items-center gap-2 bg-white/10 backdrop-blur-md px-3 py-1.5 rounded-xl border border-white/20 text-white/90">
+                    <Languages size={16} />
+                    <select
+                        value={i18n.language}
+                        onChange={(e) => changeLanguage(e.target.value)}
+                        className="bg-transparent border-none text-xs font-bold focus:outline-none cursor-pointer pr-1"
+                    >
+                        {languages.map(lang => (
+                            <option key={lang.code} value={lang.code} className="text-slate-900">{lang.label}</option>
+                        ))}
+                    </select>
+                </div>
+            </header>
+
             {/* Background Decorations */}
             <div className="absolute top-0 left-0 w-full h-[50vh] bg-gradient-to-br from-indigo-600 via-indigo-500 to-violet-500 skew-y-[-6deg] origin-top-left translate-y-[-20%] z-0"></div>
 
@@ -48,7 +74,7 @@ export const Login = () => {
                         <Building2 className="text-white h-8 w-8" />
                     </div>
                     <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-slate-900 to-slate-700">PGKhata</h1>
-                    <p className="text-slate-500 mt-2 font-medium">Welcome back, Owner!</p>
+                    <p className="text-slate-500 mt-2 font-medium">{t('common.welcome')}, {t('common.owner')}!</p>
                 </div>
 
                 <form onSubmit={handleSubmit} className="space-y-5">

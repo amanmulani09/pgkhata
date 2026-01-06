@@ -28,6 +28,25 @@ def read_tenants(
     return tenants
 
 
+@router.get("/{tenant_id}", response_model=schemas.Tenant)
+def read_tenant(
+    *,
+    db: Session = Depends(deps.get_db),
+    tenant_id: int,
+    current_user: models.User = Depends(deps.get_current_active_user),
+) -> Any:
+    """
+    Get tenant by ID.
+    """
+    tenant = db.query(models.Tenant).join(models.PG).filter(
+        models.Tenant.id == tenant_id, 
+        models.PG.owner_id == current_user.id
+    ).first()
+    if not tenant:
+        raise HTTPException(status_code=404, detail="Tenant not found")
+    return tenant
+
+
 @router.post("/", response_model=schemas.Tenant)
 def create_tenant(
     *,
@@ -102,4 +121,63 @@ def checkout_tenant(
     db.add(tenant)
     db.commit()
     db.refresh(tenant)
+    return tenant
+
+
+@router.put("/{tenant_id}", response_model=schemas.Tenant)
+def update_tenant(
+    *,
+    db: Session = Depends(deps.get_db),
+    tenant_id: int,
+    tenant_in: schemas.TenantUpdate,
+    current_user: models.User = Depends(deps.get_current_active_user),
+) -> Any:
+    """
+    Update a tenant.
+    """
+    tenant = db.query(models.Tenant).join(models.PG).filter(
+        models.Tenant.id == tenant_id, 
+        models.PG.owner_id == current_user.id
+    ).first()
+
+    if not tenant:
+        raise HTTPException(status_code=404, detail="Tenant not found")
+    
+    update_data = tenant_in.dict(exclude_unset=True)
+    for field, value in update_data.items():
+        setattr(tenant, field, value)
+    
+    db.add(tenant)
+    db.commit()
+    db.refresh(tenant)
+    return tenant
+
+
+@router.delete("/{tenant_id}", response_model=schemas.Tenant)
+def delete_tenant(
+    *,
+    db: Session = Depends(deps.get_db),
+    tenant_id: int,
+    current_user: models.User = Depends(deps.get_current_active_user),
+) -> Any:
+    """
+    Delete a tenant.
+    """
+    tenant = db.query(models.Tenant).join(models.PG).filter(
+        models.Tenant.id == tenant_id, 
+        models.PG.owner_id == current_user.id
+    ).first()
+
+    if not tenant:
+        raise HTTPException(status_code=404, detail="Tenant not found")
+    
+    # Free up the bed if the tenant was active
+    if tenant.status == "active":
+        bed = db.query(models.Bed).filter(models.Bed.id == tenant.bed_id).first()
+        if bed:
+            bed.is_occupied = False
+            db.add(bed)
+    
+    db.delete(tenant)
+    db.commit()
     return tenant

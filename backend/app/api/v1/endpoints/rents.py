@@ -97,6 +97,11 @@ def update_rent(
         raise HTTPException(status_code=404, detail="Rent record not found")
         
     update_data = rent_in.dict(exclude_unset=True)
+    
+    # Auto-fill amount_paid if status is 'paid' and amount_paid isn't specified
+    if update_data.get("status") == "paid" and "amount_paid" not in update_data:
+        update_data["amount_paid"] = rent.amount_due
+
     for field, value in update_data.items():
         setattr(rent, field, value)
         
