@@ -184,7 +184,7 @@ export const TenantDetails = () => {
                                                     {new Date(rent.month).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
                                                 </div>
                                                 <div className="text-xs text-slate-500 font-medium">
-                                                    {t('common.status', { defaultValue: 'Status' })}: <span className="uppercase tracking-tighter">{rent.status === 'paid' ? t('common.paid') : t('common.pending')}</span>
+                                                    {t('common.status', { defaultValue: 'Status' })}: <span className="uppercase tracking-tighter">{rent.status === 'paid' ? t('rent.paid') : t('rent.pending')}</span>
                                                 </div>
                                             </div>
                                         </div>

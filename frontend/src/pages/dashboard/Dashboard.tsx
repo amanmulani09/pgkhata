@@ -119,7 +119,7 @@ export const Dashboard = () => {
                             <p className="text-2xl font-bold text-emerald-600">₹{stats?.total_collected_rent.toLocaleString() || '0'}</p>
                             <div className="flex justify-between items-center mt-2">
                                 <span className="text-xs text-slate-500 font-medium">{t('dashboard.out_of')} ₹{stats?.total_expected_rent.toLocaleString() || '0'}</span>
-                                <span className="text-xs font-bold text-amber-700">{t('common.pending')}: ₹{stats?.total_pending_rent.toLocaleString() || '0'}</span>
+                                <span className="text-xs font-bold text-amber-700">{t('rent.pending')}: ₹{stats?.total_pending_rent.toLocaleString() || '0'}</span>
                             </div>
                         </div>
                     </div>

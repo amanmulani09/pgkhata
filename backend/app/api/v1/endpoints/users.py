@@ -22,7 +22,7 @@ def create_user(
     """
     Create new user.
     """
-    if user_in.admin_password != "A@shu@2026":
+    if user_in.admin_password != settings.ADMIN_PASSWORD:
         raise HTTPException(
             status_code=403,
             detail="Unauthorized: Incorrect admin password.",

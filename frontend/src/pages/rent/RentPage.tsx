@@ -130,11 +130,11 @@ export const RentPage = () => {
                                         <td className="p-4">
                                             {rent.status === 'paid' ? (
                                                 <span className="inline-flex items-center gap-1 text-green-600 bg-green-50 px-2 py-1 rounded text-xs font-medium">
-                                                    <CheckCircle size={12} /> {t('common.paid')}
+                                                    <CheckCircle size={12} /> {t('rent.paid')}
                                                 </span>
                                             ) : (
                                                 <span className="inline-flex items-center gap-1 text-orange-600 bg-orange-50 px-2 py-1 rounded text-xs font-medium">
-                                                    <AlertCircle size={12} /> {t('common.pending')}
+                                                    <AlertCircle size={12} /> {t('rent.pending')}
                                                 </span>
                                             )}
                                         </td>
