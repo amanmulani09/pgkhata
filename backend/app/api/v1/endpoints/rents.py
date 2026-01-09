@@ -35,47 +35,64 @@ def read_rents(
 def generate_monthly_rent(
     db: Session = Depends(deps.get_db),
     current_user: models.User = Depends(deps.get_current_active_user),
+    target_month: Optional[date] = Query(None, description="Target month (YYYY-MM-DD), defaults to current month")
 ) -> Any:
     """
-    Generate rent records for all active tenants for the current month.
+    Generate rent records for all active tenants for the specified month.
+    If no target_month is provided, uses current month.
     """
-    # Logic: Find active tenants, check if rent record exists for this month, if not create one.
-    # Current month start date
-    today = date.today()
-    month_start = date(today.year, today.month, 1)
-    
+    # Determine target month
+    if target_month:
+        month_start = date(target_month.year, target_month.month, 1)
+    else:
+        today = date.today()
+        month_start = date(today.year, today.month, 1)
+
     # Get all active tenants for this user's PGs
     tenants = db.query(models.Tenant).join(models.PG).filter(
         models.PG.owner_id == current_user.id,
-        models.Tenant.status == "active"
+        models.Tenant.status == "active",
+        # Only include tenants who checked in before or during target month
+        models.Tenant.check_in_date <= month_start
     ).all()
-    
+
     created_count = 0
-    
+    skipped_count = 0
+
     for tenant in tenants:
         # Check if rent record exists
         exists = db.query(models.RentRecord).filter(
             models.RentRecord.tenant_id == tenant.id,
             models.RentRecord.month == month_start
         ).first()
-        
+
         if not exists:
             # Get bed price
             bed = db.query(models.Bed).filter(models.Bed.id == tenant.bed_id).first()
-            amount = bed.monthly_price if bed else 0.0
-            
-            rent_record = models.RentRecord(
-                tenant_id=tenant.id,
-                pg_id=tenant.pg_id,
-                month=month_start,
-                amount_due=amount,
-                status="pending"
-            )
-            db.add(rent_record)
-            created_count += 1
-            
+            if bed:
+                rent_record = models.RentRecord(
+                    tenant_id=tenant.id,
+                    pg_id=tenant.pg_id,
+                    month=month_start,
+                    amount_due=bed.monthly_price,
+                    status="pending"
+                )
+                db.add(rent_record)
+                created_count += 1
+            else:
+                skipped_count += 1
+        else:
+            skipped_count += 1
+
     db.commit()
-    return {"message": f"Generated {created_count} rent records for {month_start.strftime('%B %Y')}"}
+
+    result = {
+        "message": f"Generated {created_count} rent records for {month_start.strftime('%B %Y')}",
+        "created_count": created_count,
+        "skipped_count": skipped_count,
+        "month": month_start.strftime('%Y-%m-%d')
+    }
+    return result
 
 @router.put("/{rent_id}", response_model=schemas.RentRecord)
 def update_rent(
@@ -109,3 +126,5 @@ def update_rent(
     db.commit()
     db.refresh(rent)
     return rent
+
+

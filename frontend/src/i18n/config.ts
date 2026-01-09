@@ -58,7 +58,11 @@ const resources = {
                 "single_sharing": "Single Sharing",
                 "double_sharing": "Double Sharing",
                 "triple_sharing": "Triple Sharing",
-                "dormitory": "Dormitory"
+                "dormitory": "Dormitory",
+                "paid": "Paid",
+                "pending": "Pending",
+                "active": "Active",
+                "checked_out": "Checked Out"
             },
             "hero": {
                 "title": "Simplify Your PG",
@@ -226,7 +230,11 @@ const resources = {
                 "single_sharing": "एकल साझाकरण (Single Sharing)",
                 "double_sharing": "दोहरा साझाकरण (Double Sharing)",
                 "triple_sharing": "तिहरा साझाकरण (Triple Sharing)",
-                "dormitory": "डोरमेट्री"
+                "dormitory": "डोरमेट्री",
+                "paid": "भुगतान किया गया",
+                "pending": "बकाया",
+                "active": "सक्रिय",
+                "checked_out": "चेकआउट किया गया"
             },
             "hero": {
                 "title": "अपने पीजी ऑपरेशंस को",
@@ -394,7 +402,11 @@ const resources = {
                 "single_sharing": "एकल शेअरिंग (Single Sharing)",
                 "double_sharing": "दुहेरी शेअरिंग (Double Sharing)",
                 "triple_sharing": "तिहेरी शेअरिंग (Triple Sharing)",
-                "dormitory": "वसतिगृह (Dormitory)"
+                "dormitory": "वसतिगृह (Dormitory)",
+                "paid": "भरले",
+                "pending": "प्रलंबित",
+                "active": "सक्रिय",
+                "checked_out": "चेकआउट केले"
             },
             "hero": {
                 "title": "तुमच्या पीजी ऑपरेशन्सना",

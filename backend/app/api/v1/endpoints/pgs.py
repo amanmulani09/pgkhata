@@ -261,11 +261,11 @@ def update_bed(
     bed = db.query(models.Bed).join(models.Room).join(models.PG).filter(models.Bed.id == bed_id, models.PG.owner_id == current_user.id).first()
     if not bed:
         raise HTTPException(status_code=404, detail="Bed not found")
-    
+
     update_data = bed_in.dict(exclude_unset=True)
     for field, value in update_data.items():
         setattr(bed, field, value)
-    
+
     db.add(bed)
     db.commit()
     db.refresh(bed)

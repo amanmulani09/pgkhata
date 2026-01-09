@@ -2,12 +2,37 @@ from typing import Any, List, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
-from datetime import date
+from datetime import date, timedelta
+import calendar
 
 from app import models, schemas
 from app.api import deps
 
 router = APIRouter()
+
+
+def calculate_prorated_rent(check_in_date: date, monthly_rent: float) -> float:
+    """
+    Calculate prorated rent for partial month based on check-in date.
+    Args:
+        check_in_date: The date tenant checks in
+        monthly_rent: The full monthly rent amount
+    Returns:
+        Prorated rent amount for the remaining days in the month
+    """
+    # Get total days in the month
+    year = check_in_date.year
+    month = check_in_date.month
+    total_days = calendar.monthrange(year, month)[1]
+
+    # Calculate remaining days (including check-in day)
+    remaining_days = total_days - check_in_date.day + 1
+
+    # Calculate prorated amount
+    daily_rate = monthly_rent / total_days
+    prorated_amount = daily_rate * remaining_days
+
+    return round(prorated_amount, 2)
 
 @router.get("/", response_model=List[schemas.Tenant])
 def read_tenants(
@@ -83,6 +108,30 @@ def create_tenant(
     # Mark bed as occupied
     bed.is_occupied = True
     db.add(bed)
+    
+    # Explicitly flush to get tenant.id
+    db.flush()
+
+    # Auto-generate rent record for the month of check-in
+    check_in = tenant.check_in_date
+    month_start = date(check_in.year, check_in.month, 1)
+
+    # Calculate prorated rent if tenant joins mid-month
+    if check_in.day == 1:
+        # If joining on 1st, charge full month
+        first_month_amount = bed.monthly_price
+    else:
+        # If joining mid-month, calculate prorated amount
+        first_month_amount = calculate_prorated_rent(check_in, bed.monthly_price)
+
+    rent_record = models.RentRecord(
+        tenant_id=tenant.id,
+        pg_id=pg_id,
+        month=month_start,
+        amount_due=first_month_amount,
+        status="pending"
+    )
+    db.add(rent_record)
     
     db.commit()
     db.refresh(tenant)
