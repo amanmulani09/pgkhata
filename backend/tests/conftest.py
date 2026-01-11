@@ -12,8 +12,8 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import StaticPool
 
 from app.main import app
-from app.db.session import get_db
-from app.models import Base
+from app.api.deps import get_db
+from app.db.base_class import Base
 from app.core.config import Settings
 from app.core.security import create_access_token, get_password_hash
 from app.models.user import User
@@ -37,12 +37,7 @@ def test_settings():
     )
 
 
-@pytest.fixture(scope="session")
-def event_loop():
-    """Create an instance of the default event loop for the test session."""
-    loop = asyncio.get_event_loop_policy().new_event_loop()
-    yield loop
-    loop.close()
+# Event loop is handled automatically by pytest-asyncio with asyncio_mode = auto
 
 
 @pytest.fixture
