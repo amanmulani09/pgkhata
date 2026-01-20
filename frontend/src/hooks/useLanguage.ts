@@ -6,17 +6,7 @@ export const languages = [
     { code: 'mr', label: 'मराठी' },
     { code: 'kn', label: 'ಕನ್ನಡ' },
     { code: 'te', label: 'తెలుగు' },
-    { code: 'bn', label: 'বাংলা' },
     { code: 'ta', label: 'தமிழ்' },
-    { code: 'gu', label: 'ગુજરાતી' },
-    { code: 'ml', label: 'മലയാളം' },
-    { code: 'pa', label: 'ਪੰਜਾਬੀ' },
-    { code: 'ur', label: 'اردو' },
-    { code: 'or', label: 'ଓଡ଼ିଆ' },
-    { code: 'as', label: 'অসমীয়া' },
-    { code: 'mni', label: 'মৈতৈলোন্' },
-    { code: 'ne', label: 'नेपाली' },
-    { code: 'gom', label: 'कोंकणी' },
 ];
 
 export const useLanguage = () => {
