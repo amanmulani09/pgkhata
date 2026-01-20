@@ -34,7 +34,8 @@ MANIFEST
 
 # Virtual environments
 venv/
-env/
+.env.production
+.env.development
 ENV/
 env.bak/
 venv.bak/
